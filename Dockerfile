@@ -13,12 +13,6 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-# Set the environment variable for Redis host
-ENV REDIS_HOST localhost
-
-# Set the environment variable for Redis port
-ENV REDIS_PORT 6379
-
 # Expose the port on which the Node.js application will run
 EXPOSE 5000
 

@@ -1,12 +1,15 @@
-const {default: mongoose} = require('mongoose')
+const { default: mongoose } = require("mongoose");
 
 const dbConnect = async () => {
-    try {
-       await mongoose.connect(process.env.MONGODB_URL)
-        console.log('database connected')
-    } catch (error) {
-        console.log(error)
-    }
-}
+  try {
+    await mongoose.connect(process.env.MONGODB_CLUSTER_URL, {
+      useNewUrlParser: "true",
+      useUnifiedTopology: "true",
+    });
+    console.log("database connected");
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-module.exports = dbConnect
+module.exports = dbConnect;

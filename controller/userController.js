@@ -41,8 +41,7 @@ const updateUser = asyncHandler(async (req, res) => {
     const updateUser = await User.findByIdAndUpdate(_id, req.body, {
       new: true,
     });
-    await client.set(id, value);
-    client.quit();
+    await client.set(id, value);  
     res.json(updateUser);
   } catch (error) {
     throw new Error(error);
@@ -56,7 +55,6 @@ const getUser = asyncHandler(async (req, res) => {
     const user = await User.findById(id);
     const value = JSON.stringify(user);
     await client.set(id, value);
-    client.quit();
     res.json(user);
   } catch (error) {
     throw new Error(error);
