@@ -1,8 +1,8 @@
 const redis = require("redis");
 const client = redis.createClient({
   socket: {
-    host: "redis", // Redis container hostname
-    port: 6379, // Redis container port
+    host: process.env.HOST_REDIS, // Redis container hostname
+    port: process.env.PORT_REDIS, // Redis container port
   },
 });
 
@@ -15,4 +15,4 @@ const redisConnections = async () => {
   }
 };
 
-module.exports = { redisConnections,client };
+module.exports = { redisConnections, client };

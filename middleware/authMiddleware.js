@@ -22,12 +22,10 @@ const authentication = asyncHandler(async (req, res, next) => {
 });
 
 const isAdmin = asyncHandler(async (req, res, next) => {
-  const {_id} = req.user
-  const user = await User.findById(_id)
-  if(user.role !== "admin") throw new Error("Not allow")
+  const { _id } = req.user;
+  const user = await User.findById(_id);
+  if (user.role !== "admin") throw new Error("Not allow");
   else next();
-})
+});
 
-
-
-module.exports = { authentication,isAdmin };
+module.exports = { authentication, isAdmin };
