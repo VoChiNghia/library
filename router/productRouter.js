@@ -45,17 +45,16 @@ module.exports = router;
 
 /**
  * @swagger
- * /api/products/:
+ * /api/products:
  *   post:
  *     summary: Create a new product.
  *     tags: [Products]
- *     parameters:
- *       - in: body
- *         name: product
- *         description: Product object that needs to be created.
- *         required: true
- *         schema:
- *           $ref: '#/definitions/Product'
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/definitions/Product'
  *     responses:
  *       200:
  *         description: Successfully created a new product.

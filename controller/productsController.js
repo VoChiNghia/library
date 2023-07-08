@@ -6,9 +6,10 @@ const fs = require("fs");
 const createProduct = asyncHandler(async (req, res) => {
   try {
     const product = await Products.create(req.body);
+    console.log(product)
     res.json(product);
   } catch (error) {
-    throw new Error();
+    throw new Error(error);
   }
 });
 

@@ -34,11 +34,9 @@ const productSchema = new mongoose.Schema(
     },
     summary: {
       type: String,
-      required: true,
     },
     quantity: {
       type: Number,
-      required: true,
     },
     images: [],
     views:{
