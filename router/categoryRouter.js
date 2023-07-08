@@ -23,13 +23,12 @@ module.exports = router;
  *   post:
  *     summary: Create a new category.
  *     tags: [Categories]
- *     parameters:
- *       - in: body
- *         name: category
- *         description: Category object that needs to be created.
- *         required: true
- *         schema:
- *           $ref: '#/components/schemas/Category'
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Category'
  *     responses:
  *       200:
  *         description: Successfully created a new category.
