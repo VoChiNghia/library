@@ -54,8 +54,6 @@ module.exports = router
  *           type: string
  *         citizenNumber:
  *           type: string
- *         role:
- *           type: string
  *       required:
  *         - name
  *         - email
@@ -63,7 +61,6 @@ module.exports = router
  *         - password
  *         - studentCode
  *         - citizenNumber
- *         - role
  */
 
 /**

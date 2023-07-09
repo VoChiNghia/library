@@ -152,7 +152,7 @@ module.exports = router;
  *               items:
  *                 $ref: '#/definitions/Product'
  * 
- * /update/{id}:
+ * /api/update/{id}:
  *   put:
  *     summary: Update a product by ID.
  *     tags: [Products]
