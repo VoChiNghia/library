@@ -34,6 +34,23 @@ const login = asyncHandler(async (req, res) => {
   }
 });
 
+const loginAdmin = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email: email });
+  if (user && (await user.isPasswordMatched(password))) {
+    res.json({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      mobile: user.mobile,
+      role: user.role,
+      token: generateToken(user._id),
+    });
+  } else {
+    throw new Error("invalid");
+  }
+});
+
 const updateUser = asyncHandler(async (req, res) => {
   const { _id } = req.user;
   validateMongoDbId(_id);
@@ -106,4 +123,5 @@ module.exports = {
   updateUser,
   deleteUser,
   changePassword,
+  loginAdmin
 };

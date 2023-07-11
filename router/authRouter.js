@@ -1,19 +1,28 @@
-const express = require('express');
-const { createUser, login, getUser, getAllUser, updateUser, deleteUser, changePassword } = require('../controller/userController');
-const { authentication, isAdmin } = require('../middleware/authMiddleware');
-const catchMiddleware = require('../middleware/redisCatchUser');
-const router = express.Router()
+const express = require("express");
+const {
+  createUser,
+  login,
+  getUser,
+  getAllUser,
+  updateUser,
+  deleteUser,
+  changePassword,
+  loginAdmin,
+} = require("../controller/userController");
+const { authentication, isAdmin } = require("../middleware/authMiddleware");
+const catchMiddleware = require("../middleware/redisCatchUser");
+const router = express.Router();
 
-router.post('/',createUser)
-router.post('/login',login)
-router.get('/get-all-user',authentication,getAllUser)
-router.put('/edit-user',authentication,isAdmin,updateUser)
-router.put('/password',authentication,changePassword)
-router.get('/:id',authentication,catchMiddleware,getUser)
-router.delete('/:id',authentication,isAdmin,deleteUser)
+router.post("/", createUser);
+router.post("/login", login);
+router.post("/login-admin", loginAdmin);
+router.get("/get-all-user", authentication, getAllUser);
+router.put("/edit-user", authentication, isAdmin, updateUser);
+router.put("/password", authentication, changePassword);
+router.get("/:id", authentication, catchMiddleware, getUser);
+router.delete("/:id", authentication, isAdmin, deleteUser);
 
-module.exports = router
-
+module.exports = router;
 
 /**
  * @swagger
@@ -34,7 +43,7 @@ module.exports = router
  *         description: User created successfully
  *       400:
  *         description: Invalid request
- * 
+ *
  * components:
  *   schemas:
  *     User:
@@ -191,7 +200,7 @@ module.exports = router
  *         description: Unauthorized - Invalid or missing authentication token
  *       500:
  *         description: Internal server error
- * 
+ *
  * components:
  *   schemas:
  *     ChangePasswordData:
@@ -232,7 +241,7 @@ module.exports = router
  *         description: User not found
  *       500:
  *         description: Internal server error
- * 
+ *
  */
 
 /**
@@ -263,6 +272,6 @@ module.exports = router
  *         description: User not found
  *       500:
  *         description: Internal server error
- * 
- * 
+ *
+ *
  */
