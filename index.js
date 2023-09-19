@@ -15,12 +15,12 @@ const cors = require('cors')
 const {notFound,errorHandler} = require("./middleware/errorHandler")
 const {redisConnections} = require('./config/redisConnect')
 
+require('./config/dbConnect')
 const PORT = 5000
 const {version} = require('./package.json')
 app.use(cors())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-dbConnect()
 redisConnections()
 const options = {
     swaggerDefinition: {

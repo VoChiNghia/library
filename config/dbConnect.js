@@ -1,12 +1,28 @@
 const { default: mongoose } = require("mongoose");
-
-const dbConnect = async () => {
-  try {
-    await mongoose.connect(process.env.MONGODB_CLUSTER_URL);
-    console.log("database connected");
-  } catch (error) {
-    console.log(error);
+require("dotenv").config();
+class Database {
+  constructor() {
+    this.connect();
   }
-};
 
-module.exports = dbConnect;
+  connect() {
+    mongoose
+      .connect(process.env.MONGODB_CLUSTER_URL)
+      .then((_) => {
+        console.log("database connected");
+      })
+      .catch((error) => console.log(error));
+  }
+
+  static getInstance() {
+    if (!Database.instance) {
+      Database.instance = new Database();
+
+      return Database.instance;
+    }
+  }
+}
+
+const instance = Database.getInstance();
+
+module.exports = instance;

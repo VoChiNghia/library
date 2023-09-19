@@ -3,6 +3,25 @@ const User = require("../model/userModel");
 const asyncHandler = require("express-async-handler");
 const validateMongoDbId = require("../utils/validateMongodbId");
 const { client } = require("../config/redisConnect");
+const crypto = require("node:crypto");
+const Token = require("../model/tokenModel");
+
+function generateKeyPair() {
+  const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
+    modulusLength: 2048,
+    publicKeyEncoding: {
+      type: "spki",
+      format: "pem",
+    },
+    privateKeyEncoding: {
+      type: "pkcs8",
+      format: "pem",
+    },
+  });
+
+  return { publicKey, privateKey };
+}
+
 const createUser = asyncHandler(async (req, res) => {
   const { studentCode } = req.body;
   const user = await User.findOne({ studentCode: studentCode });
@@ -18,25 +37,40 @@ const createUser = asyncHandler(async (req, res) => {
 
 const login = asyncHandler(async (req, res) => {
   const { studentCode, password } = req.body;
-  const user = await User.findOne({ studentCode: studentCode });
-  if (user && (await user.isPasswordMatched(password))) {
-    res.json({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      mobile: user.mobile,
-      studentCode: user.studentCode,
-      role: user.role,
-      token: generateToken(user._id),
-    });
-  } else {
-    throw new Error("invalid");
+  try {
+    const user = await User.findOne({ studentCode: studentCode });
+    if (user && (await user.isPasswordMatched(password))) {
+      const { publicKey, privateKey } = generateKeyPair();
+      const token = generateToken(user._id, publicKey, privateKey);
+      await Token.findOneAndUpdate(
+        { userId: user._id },
+        {
+          userId: user._id,
+          publicKey,
+          privateKey,
+        },
+        { upsert: true, new: true }
+      );
+      res.json({
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        mobile: user.mobile,
+        studentCode: user.studentCode,
+        role: user.role,
+        token: token.token,
+        refeshToken: token.refeshToken,
+      });
+    }
+  } catch (error) {
+    throw new Error(error);
   }
 });
 
 const loginAdmin = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email: email });
+  if (!user) throw new Error("Email Không tìm thấy");
   if (user && (await user.isPasswordMatched(password))) {
     res.json({
       id: user.id,
@@ -47,7 +81,7 @@ const loginAdmin = asyncHandler(async (req, res) => {
       token: generateToken(user._id),
     });
   } else {
-    throw new Error("invalid");
+    throw new Error("Mật khẩu không chính xác");
   }
 });
 
@@ -58,7 +92,7 @@ const updateUser = asyncHandler(async (req, res) => {
     const updateUser = await User.findByIdAndUpdate(_id, req.body, {
       new: true,
     });
-    await client.set(id, value);  
+    await client.set(id, value);
     res.json(updateUser);
   } catch (error) {
     throw new Error(error);
@@ -123,5 +157,5 @@ module.exports = {
   updateUser,
   deleteUser,
   changePassword,
-  loginAdmin
+  loginAdmin,
 };
